@@ -11,6 +11,9 @@ class PayButton extends StatelessWidget {
     Key? key,
     required this.amount,
     required this.onPressed,
+    this.textColor,
+    this.iconColor,
+    this.icon,
   }) : super(key: key);
 
   /// The [amount] in paisa.
@@ -18,6 +21,15 @@ class PayButton extends StatelessWidget {
 
   /// Called when user presses the button.
   final VoidCallback onPressed;
+
+  /// The color of the button text. Defaults to surface.shade900.
+  final Color? textColor;
+
+  /// The color of the button icon. Defaults to [textColor] or surface.shade900.
+  final Color? iconColor;
+
+  /// An optional leading icon for the button.
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +39,40 @@ class PayButton extends StatelessWidget {
         _AmountWidget(amount: amount),
         const SizedBox(height: 32),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: KhaltiColor.of(context).surface.shade300,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 2,
+            minimumSize: const Size(double.infinity, 48),
+            textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: textColor ?? KhaltiColor.of(context).surface.shade900,
+                ),
+          ),
           onPressed: onPressed,
-          child: Text(context.loc.pay.toUpperCase()),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                Icon(
+                  icon,
+                  color: iconColor ?? textColor ?? KhaltiColor.of(context).surface.shade900,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+              ],
+              Text(
+                context.loc.pay.toUpperCase(),
+                style: TextStyle(
+                  color: textColor ?? KhaltiColor.of(context).surface.shade900,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
